@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SchoolApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/students")]
     [ApiController]
     public class SchoolController : ControllerBase
     {
@@ -22,6 +22,33 @@ namespace SchoolApi.Controllers
             new StudentModel(){Id=7,CourseId=320,Name="Ralph",Surname="Sutre",Gender='M'},
             new StudentModel(){Id=8,CourseId=400,Name="Daniella",Surname="Ekto",Gender='F'}
         };
+
+        [HttpGet]
+        public IActionResult GetList()
+        {
+            return Ok(studentList);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetStudent(int id)
+        {
+            var student = studentList.FirstOrDefault(x => x.Id == id);
+            if (student != null)
+            {
+                return Ok(student);
+            }
+            return NotFound();
+        }
+        [HttpPost]
+        public IActionResult AddStudent([FromBody]StudentModel student)
+        {
+            if (ModelState.IsValid)
+            {
+                studentList.Add(student);
+                return Created($"api/students/{student.Id}",student);
+            }
+            return BadRequest();
+        }
 
     }
 }
