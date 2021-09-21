@@ -20,7 +20,7 @@ namespace SchoolApi
         public string Surname { get; set; }
 
         [Required]
-        [RegularExpression("(M|W)", ErrorMessage = "Only E or W is allowed")]
-        public char Gender { get; set; }
+        [RegularExpression("(M|W)", ErrorMessage = "Only M or W is allowed")]
+        public string Gender { get; set; }
     }
 }
