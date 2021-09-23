@@ -29,7 +29,7 @@ namespace SchoolApi.Controllers
             {
                 return true;
             }
-            return property.Contains(pattern);
+            return property.ToLower().Contains(pattern.ToLower());
         }
 
         private bool Compare(int? number, int property)
