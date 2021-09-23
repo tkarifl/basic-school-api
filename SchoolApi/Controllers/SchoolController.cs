@@ -23,21 +23,34 @@ namespace SchoolApi.Controllers
             new StudentModel(){Id=8,CourseId=400,Name="Daniella",Surname="Ekto",Gender="W"}
         };
 
+        private bool Compare(string? pattern, string property)
+        {
+            if (pattern==null||pattern.Length == 0)
+            {
+                return true;
+            }
+            return property.Contains(pattern);
+        }
+
+        private bool Compare(int? number, int property)
+        {
+            if (number ==null)
+            {
+                return true;
+            }
+            return number == property;
+        }
         [HttpGet]
-        public IActionResult GetList()
+        public IActionResult GetStudents()
         {
             return Ok(studentList);
         }
-
-        [HttpGet("{id}")]
-        public IActionResult GetStudent([FromQuery] int id)
+        [HttpGet("list")]
+        public IActionResult GetStudentsFromQuery([FromQuery] int? id,int? courseid, string name, string surname, string gender)
         {
-            var student = studentList.FirstOrDefault(x => x.Id == id);
-            if (student != null)
-            {
-                return Ok(student);
-            }
-            return NotFound();
+            var filteredStudents = studentList.Where(x => Compare(id, x.Id) && Compare(courseid, x.CourseId) &&
+              Compare(name, x.Name) && Compare(surname, x.Surname) && Compare(gender, x.Gender));
+            return Ok(filteredStudents);
         }
         [HttpPut]
         public IActionResult UpdateStudent([FromBody] StudentModel student)
@@ -65,7 +78,7 @@ namespace SchoolApi.Controllers
             }
             return BadRequest();
         }
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public IActionResult DeleteStudent([FromQuery] int id)
         {
             var upToDelete = studentList.FirstOrDefault(x => x.Id == id);
