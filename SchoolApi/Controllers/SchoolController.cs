@@ -39,6 +39,22 @@ namespace SchoolApi.Controllers
             }
             return NotFound();
         }
+        [HttpPut]
+        public IActionResult UpdateStudent([FromBody] StudentModel student)
+        {
+            if (ModelState.IsValid)
+            {
+                var upToUpdate = studentList.FirstOrDefault(x => x.Id == student.Id);
+                if (upToUpdate != null)
+                {
+                    studentList.Remove(upToUpdate);
+                    studentList.Add(student);
+                    return Created($"api/students/{student.Id}", student);
+                }
+                return BadRequest("The object to be updated was not found");
+            }
+            return BadRequest();
+        }
         [HttpPost]
         public IActionResult AddStudent([FromBody] StudentModel student)
         {
@@ -58,7 +74,7 @@ namespace SchoolApi.Controllers
                 studentList.Remove(upToDelete);
                 return Ok();
             }
-            return NotFound();
+            return NotFound("The object to be deleted was not found");
         }
 
     }
